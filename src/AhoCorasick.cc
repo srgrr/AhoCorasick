@@ -7,9 +7,9 @@ Node* AhoCorasick::_trie_insert(Node* root, std::string w, int index, int output
   }
   if(index == int(w.size())) {
     root->output.push_back(output_index);
-    return root;
+  } else {
+    root->adj[w[index]] = _trie_insert(root->adj[w[index]], w, index+1, output_index);
   }
-  root->adj[w[index]] = _trie_insert(root->adj[w[index]], w, index+1, output_index);
   return root;
 }
 
