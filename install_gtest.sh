@@ -12,7 +12,7 @@ apt-get -qq update
 apt-get install -y libgtest-dev
 wget https://github.com/google/googletest/archive/release-1.7.0.tar.gz
 tar xf release-1.7.0.tar.gz
-googletest-release-1.7.0
+cd googletest-release-1.7.0
 cmake -DBUILD_SHARED_LIBS=OFF
 make
 cp -a include/gtest /usr/include
