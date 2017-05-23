@@ -17,4 +17,6 @@ cmake -DBUILD_SHARED_LIBS=OFF
 make
 cp -a include/gtest /usr/include
 cp -a libgtest_main.a libgtest.a /usr/lib/
-cd "${TRAVIS_BUILD_DIR}"
+cd ..
+rm googletest-release-1.7.0 -rf
+rm release-1.7.0.tar.gz
