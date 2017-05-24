@@ -4,7 +4,7 @@
 # please, read the script if you are not sure about what it does
 
 if [ "$(id -u)" != "0" ]; then
-   echo "[ ERROR ]: This script must be run as root" 1>&2
+   echo "[ ERROR ]: This script must be run as root. Please, read the scripts commands to know what this script does." 1>&2
    exit 1
 fi
 

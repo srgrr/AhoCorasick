@@ -63,16 +63,22 @@ void AhoCorasick::_build_automata()  {
   }
 }
 
-AhoCorasick::AhoCorasick() {
-
+void AhoCorasick::_erase_tree(Node* root) {
+  if(root == NULL) return;
+  for(int i=0; i<AhoCorasick::ALPHABET_SIZE; ++i) {
+    if(root->adj[i] != root) {
+      _erase_tree(root->adj[i]);
+    }
+  }
+  delete root;
 }
 
 AhoCorasick::~AhoCorasick() {
-
+  _erase_tree(_root);
 }
 
 AhoCorasick::AhoCorasick(std::vector< std::string > patterns) {
-  set_patterns(patterns);
+  _set_patterns(patterns);
 }
 
 /*
@@ -85,11 +91,18 @@ std::vector< std::vector< int > > AhoCorasick::find_matches(std::string text) {
   Node* current_state = _root;
 
   for(int i=0; i<int(text.size()); ++i) {
-    // add all outputs of the current state as matches
+    // this step comes from the paragraph that begins with
+    // "The failure function produced by Algorithm 3 is not optimal..."
+    // Basically, you must perform a KMP-like failure iteration
+    // It must be noted that the cost of this function is still linear
+    // since current_state can be "backed" O(|d|) times and it is
+    // "moved" forward just one time per iteration
     while(current_state->adj[text[i]] == NULL) {
       current_state = current_state->fail;
     }
+    // Advance to the proper state
     current_state = current_state->adj[text[i]];
+    // Add all the found occurrences
     for(int outp : current_state->output) {
         ret[outp].push_back(i - int(_patterns[outp].size()) + 1);
     }
@@ -111,7 +124,7 @@ std::map< std::string, std::vector< int > > AhoCorasick::find_matches_map(std::s
   return ret;
 }
 
-void AhoCorasick::set_patterns(std::vector< std::string > patterns) {
+void AhoCorasick::_set_patterns(std::vector< std::string > patterns) {
   _patterns = patterns;
   _build_automata();
 }

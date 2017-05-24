@@ -18,6 +18,9 @@ public:
   Node() {
     fail = NULL;
   }
+  ~Node() {
+
+  }
 };
 
 /*
@@ -26,7 +29,6 @@ public:
 class AhoCorasick {
 private:
   // "Trie" related data and methods
-
 
   Node* _root;
 
@@ -39,15 +41,15 @@ private:
 
   // Methods
   void _build_automata();
+  void _erase_tree(Node* root);
+  void _set_patterns(std::vector< std::string > patterns);
 public:
   const static int ALPHABET_SIZE = 1<<(8*sizeof(char));
-  AhoCorasick();
   ~AhoCorasick();
   AhoCorasick(std::vector< std::string > patterns);
   std::vector< std::vector<int> > find_matches(std::string text);
   std::map< std::string, std::vector< int > > find_matches_map(std::string text);
   // Getters and setters
-  void set_patterns(std::vector< std::string > patterns);
   const std::vector< std::string >& get_patterns();
   void print_dot_automata();
 };
