@@ -47,6 +47,9 @@ test_kmp: ${TEST}/test_KMP.cc ${TEST_KMP_OBJECTS} ${BRUTEFORCE_OBJECTS}
 test_aho_corasick: ${TEST}/test_AhoCorasick.cc ${TEST_AHO_CORASICK_OBJECTS}
 	g++ -o ${TESTBIN}/test_AhoCorasick ${TEST}/test_AhoCorasick.cc ${TEST_AHO_CORASICK_OBJECTS} ${TEST_FLAGS}
 
+aho_corasick_automata: ${SRC}/AhoCorasick_DFA.cc ${AHO_CORASICK_OBJECTS}
+	g++ -o ${BIN}/AhoCorasick_DFA ${SRC}/AhoCorasick_DFA.cc ${AHO_CORASICK_OBJECTS} ${RELEASE_FLAGS}
+
 tests_allinone: clean ${TEST_SOURCES} ${TEST_AHO_CORASICK_OBJECTS} ${TEST_KMP_OBJECTS} ${BRUTEFORCE_OBJECTS}
 	g++ -o ${TESTBIN}/main ${TEST_SOURCES} ${TEST_AHO_CORASICK_OBJECTS}  ${TEST_KMP_OBJECTS} ${BRUTEFORCE_OBJECTS} ${TEST_FLAGS}
 

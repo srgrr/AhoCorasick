@@ -1,7 +1,9 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <map>
+#include <set>
 
 
 class Node {
@@ -12,7 +14,7 @@ public:
   // fail function
   Node* fail;
   // output function
-  std::vector< int > output;
+  std::set< int > output;
   Node() {
     fail = NULL;
   }
@@ -40,10 +42,12 @@ private:
 public:
   const static int ALPHABET_SIZE = 1<<(8*sizeof(char));
   AhoCorasick();
+  ~AhoCorasick();
   AhoCorasick(std::vector< std::string > patterns);
   std::vector< std::vector<int> > find_matches(std::string text);
   std::map< std::string, std::vector< int > > find_matches_map(std::string text);
   // Getters and setters
   void set_patterns(std::vector< std::string > patterns);
   const std::vector< std::string >& get_patterns();
+  void print_dot_automata();
 };
