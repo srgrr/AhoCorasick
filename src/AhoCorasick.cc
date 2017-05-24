@@ -86,15 +86,12 @@ std::vector< std::vector< int > > AhoCorasick::find_matches(std::string text) {
 
   for(int i=0; i<int(text.size()); ++i) {
     // add all outputs of the current state as matches
-
-    if(current_state->adj[text[i]] != NULL) {
-      current_state = current_state->adj[text[i]];
-    }
-    else {
+    while(current_state->adj[text[i]] == NULL) {
       current_state = current_state->fail;
     }
+    current_state = current_state->adj[text[i]];
     for(int outp : current_state->output) {
-        ret[outp].push_back(i);
+        ret[outp].push_back(i - int(_patterns[outp].size()) + 1);
     }
   }
 
