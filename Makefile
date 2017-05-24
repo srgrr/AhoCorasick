@@ -8,7 +8,7 @@ OBJECT=obj
 
 # COMPILER FLAGS
 GTEST_FLAGS=-lgtest -lgtest_main -pthread
-GCC_FLAGS=-std=c++11 -Wall -pedantic -I${INCLUDE}
+GCC_FLAGS=-std=c++0x -Wall -pedantic -I${INCLUDE}
 DEBUG_FLAGS=-O0 -gstabs+
 RELEASE_FLAGS=-O2 ${GCC_FLAGS}
 TEST_FLAGS=${RELEASE_FLAGS} ${GTEST_FLAGS}
