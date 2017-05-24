@@ -38,11 +38,13 @@ private:
 
   // Attributes
   std::vector< std::string > _patterns;
+  std::map< Node*, std::string > _label_map;
 
   // Methods
   void _build_automata();
   void _erase_tree(Node* root);
   void _set_patterns(std::vector< std::string > patterns);
+  void _label_automata(Node* root, std::string pref);
 public:
   const static int ALPHABET_SIZE = 1<<(8*sizeof(char));
   ~AhoCorasick();

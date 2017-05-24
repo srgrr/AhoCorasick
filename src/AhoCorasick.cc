@@ -133,19 +133,29 @@ const std::vector< std::string >& AhoCorasick::get_patterns() {
   return _patterns;
 }
 
+void AhoCorasick::_label_automata(Node* root, std::string pref) {
+  _label_map[root] = pref;
+  for(int i=0; i<AhoCorasick::ALPHABET_SIZE; ++i) {
+    if(root->adj[i] != NULL && root->adj[i] != root) {
+      _label_automata(root->adj[i], pref + char(i));
+    }
+  }
+}
 
 void AhoCorasick::print_dot_automata() {
+  _label_map.clear();
+  _label_automata(_root, "");
   std::cout << "digraph AhoCorasickAutomata {" << std::endl;
   std::queue< Node* > Q;
   Q.push(_root);
   while(!Q.empty()) {
     Node* v = Q.front();
     Q.pop();
-    std::cout << "\"" << v << "\"" << " -> " << "\"" << v->fail <<  "\"" <<" [label=\"#\"];" << std::endl;
+    std::cout << "\"" << _label_map[v] << "\"" << " -> " << "\"" << _label_map[v->fail] <<  "\"" <<" [label=\"#\"];" << std::endl;
     for(int i=0; i<AhoCorasick::ALPHABET_SIZE; ++i) {
       if(v->adj[i] != NULL && v->adj[i] != _root) {
         Q.push(v->adj[i]);
-        std::cout << "\"" << v << "\"" << " -> " << "\"" << v->adj[i] << "\"" << " [label=\"" << char(i) << "\"];" << std::endl;
+        std::cout << "\"" << _label_map[v] << "\"" << " -> " << "\"" << _label_map[v->adj[i]] << "\"" << " [label=\"" << char(i) << "\"];" << std::endl;
       }
     }
   }
