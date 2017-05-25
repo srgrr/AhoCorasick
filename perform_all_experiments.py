@@ -76,8 +76,7 @@ create_dir('data/synthetic/progressive')
 create_dir('results/synthetic/progressive')
 
 # progressive wrt text length
-#lengths = range(1000000, 101000000, 1000000)
-lengths = range(100, 1100, 100)
+lengths = range(1000000, 101000000, 1000000)
 times = []
 for i in range(len(algorithms)):
     times.append([])
@@ -102,6 +101,7 @@ for i in range(len(algorithms)):
 plt.legend(handles=plots)
 
 plt.savefig('results/synthetic/progressive/text_length.png')
+plt.close()
 
 # progressive wrt pattern count
 lengths = range(1, 101)
@@ -129,6 +129,7 @@ for i in range(len(algorithms)):
 plt.legend(handles=plots)
 
 plt.savefig('results/synthetic/progressive/pattern_count.png')
+plt.close()
 
 # progressive wrt pattern length
 lengths = range(100, 1100, 100)
@@ -156,6 +157,7 @@ for i in range(len(algorithms)):
 plt.legend(handles=plots)
 
 plt.savefig('results/synthetic/progressive/pattern_length.png')
+plt.close()
 
 '''
     Perform bibliographic experiments
