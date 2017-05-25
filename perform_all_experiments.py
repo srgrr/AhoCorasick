@@ -55,7 +55,7 @@ create_dir('results')
 create_dir('results/synthetic')
 # AHO vs KMP vs BFA on single-pattern matching
 pattern = 'a'*19999 + 'b'
-text = 'a'*1000000
+text = 'a'*100000
 create_dir('data/patterns/synthetic')
 create_dir('data/synthetic')
 open('data/patterns/synthetic/1.txt', 'w').write(pattern)
