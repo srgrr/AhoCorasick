@@ -58,7 +58,7 @@ main: ${MAIN_OBJECTS} ${AHO_CORASICK_OBJECTS} ${BRUTEFORCE_OBJECTS} ${KMP_OBJECT
 
 all_tests: tests_allinone
 
-all: main all_tests aho_corasick_automata
+all: clean main all_tests aho_corasick_automata
 
 clean:
 	rm -rf ${OBJECT}
