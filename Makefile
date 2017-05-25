@@ -50,15 +50,15 @@ test_aho_corasick: ${TEST}/test_AhoCorasick.cc ${TEST_AHO_CORASICK_OBJECTS}
 aho_corasick_automata: ${SRC}/AhoCorasick_DFA.cc ${AHO_CORASICK_OBJECTS}
 	g++ -o ${BIN}/AhoCorasick_DFA ${SRC}/AhoCorasick_DFA.cc ${AHO_CORASICK_OBJECTS} ${RELEASE_FLAGS}
 
-tests_allinone: clean ${TEST_SOURCES} ${TEST_AHO_CORASICK_OBJECTS} ${TEST_KMP_OBJECTS} ${BRUTEFORCE_OBJECTS}
-	g++ -o ${TESTBIN}/main ${TEST_SOURCES} ${TEST_AHO_CORASICK_OBJECTS}  ${TEST_KMP_OBJECTS} ${BRUTEFORCE_OBJECTS} ${TEST_FLAGS}
+tests_allinone: ${TEST_SOURCES} ${TEST_AHO_CORASICK_OBJECTS} ${TEST_KMP_OBJECTS} ${BRUTEFORCE_OBJECTS}
+	g++ -o ${TESTBIN}/main ${TEST}/test_Main.cc ${TEST_SOURCES} ${TEST_AHO_CORASICK_OBJECTS}  ${TEST_KMP_OBJECTS} ${BRUTEFORCE_OBJECTS} ${TEST_FLAGS} -lgtest_main
 
-main: clean ${MAIN_OBJECTS} ${AHO_CORASICK_OBJECTS} ${BRUTEFORCE_OBJECTS} ${KMP_OBJECTS}
+main: ${MAIN_OBJECTS} ${AHO_CORASICK_OBJECTS} ${BRUTEFORCE_OBJECTS} ${KMP_OBJECTS}
 	g++ -o ${BIN}/main ${SRC}/main.cc ${AHO_CORASICK_OBJECTS} ${BRUTEFORCE_OBJECTS} ${KMP_OBJECTS} ${RELEASE_FLAGS}
 
 all_tests: tests_allinone
 
-all: main
+all: main all_tests aho_corasick_automata
 
 clean:
 	rm -rf ${OBJECT}

@@ -11,7 +11,7 @@ class AhoCorasickTest : public ::testing::Test {
  protected:
 
   AhoCorasickTest() {
-
+    
   }
 
   virtual ~AhoCorasickTest() {
