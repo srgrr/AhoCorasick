@@ -46,14 +46,14 @@ TEST_F(KMPTest, prefix_test_2) {
 TEST_F(KMPTest, match_test_1) {
   std::string pattern = "aba";
   std::string text = "ababa";
-  std::vector< int > got = KMP::get_matches(pattern, text);
+  std::vector< int > got = KMP::find_matches(pattern, text);
   std::vector< int > should = {0, 2};
   ASSERT_EQ(should, got);
 }
 
 TEST_F(KMPTest, match_test_2) {
   KMP matcher("aba");
-  std::vector< int > got = matcher.get_matches("ababa");
+  std::vector< int > got = matcher.find_matches("ababa");
   std::vector< int > should = {0, 2};
   ASSERT_EQ(should, got);
 }
@@ -68,8 +68,8 @@ TEST_F(KMPTest, match_test_random) {
    std::string text;
    for(int j=0; j<p; ++j) pattern += pool[std::rand()%4];
    for(int j=0; j<t; ++j) text += pool[std::rand()%4];
-   std::vector< int > bf = BruteForce::get_matches(pattern, text);
-   std::vector< int > kmp = KMP::get_matches(pattern, text);
+   std::vector< int > bf = BruteForce::find_matches(pattern, text);
+   std::vector< int > kmp = KMP::find_matches(pattern, text);
    ASSERT_EQ(bf, kmp);
  }
 }

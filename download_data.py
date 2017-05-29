@@ -11,7 +11,7 @@ to_download = [
 
 names = [
 'data/books/shakespeare.txt',
-'data/patterns/english_words.txt'
+'patterns/english_words.txt'
 ]
 
 def create_dir(dirname):
@@ -23,7 +23,7 @@ def create_dir(dirname):
 
 create_dir('data')
 create_dir('data/books')
-create_dir('data/patterns')
+create_dir('patterns')
 
 for (resource, dest) in zip(to_download, names):
     if True or not os.path.exists(dest):

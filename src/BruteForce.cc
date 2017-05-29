@@ -1,6 +1,6 @@
 #include "BruteForce.h"
 
-std::vector< int > BruteForce::get_matches(std::string pattern, std::string text) {
+std::vector< int > BruteForce::find_matches(std::string pattern, std::string text) {
   std::vector< int > ret;
   int n = int(text.size());
   int m = int(pattern.size());

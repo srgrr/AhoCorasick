@@ -1,5 +1,6 @@
 #include "AhoCorasick.h"
 #include "BruteForce.h"
+#include "Trie.h"
 #include "KMP.h"
 #include <iostream>
 #include <fstream>
@@ -12,10 +13,15 @@ std::vector< std::vector< int > > aho(std::vector < std::string > patterns, std:
  return matcher.find_matches(text);
 }
 
+std::vector< std::vector< int > > trie(std::vector < std::string > patterns, std::string text) {
+ Trie matcher(patterns);
+ return matcher.find_matches(text);
+}
+
 std::vector< std::vector< int > > kmp(std::vector < std::string > patterns, std::string text) {
   std::vector< std::vector< int > > ret;
   for(int i=0; i<int(patterns.size()); ++i) {
-    ret.push_back(KMP::get_matches(patterns[i], text));
+    ret.push_back(KMP::find_matches(patterns[i], text));
   }
   return ret;
 }
@@ -23,7 +29,7 @@ std::vector< std::vector< int > > kmp(std::vector < std::string > patterns, std:
 std::vector< std::vector< int > > bf(std::vector < std::string > patterns, std::string text) {
   std::vector< std::vector< int > > ret;
   for(int i=0; i<int(patterns.size()); ++i) {
-    ret.push_back(BruteForce::get_matches(patterns[i], text));
+    ret.push_back(BruteForce::find_matches(patterns[i], text));
   }
   return ret;
 }
@@ -57,6 +63,7 @@ int main(int argc, char** argv) {
   std::vector< std::vector< int > > matches;
   if(algorithm == "aho") matches = aho(patterns, text);
   else if(algorithm == "kmp") matches = kmp(patterns, text);
+  else if(algorithm == "trie") matches = trie(patterns, text);
   else matches = bf(patterns, text);
   print_beautified(patterns, matches);
 }

@@ -3,7 +3,7 @@
     (see Makefile)
 '''
 import subprocess
-import matplotlib.pyplot as plt
+import pylab as plt
 import time
 import glob
 import sys
@@ -14,9 +14,10 @@ alphabet = "abcdefghijklmnopqrstuvwxyz"
 subprocess.call(['make', 'clean'])
 subprocess.call(['make', 'main'])
 subprocess.call(['rm', 'data', '-rf'])
+subprocess.call(['rm', 'patterns', '-rf'])
 subprocess.call(['rm', 'results', '-rf'])
 
-algorithms = ['aho', 'kmp', 'bfa']
+algorithms = ['aho', 'kmp', 'bfa', 'trie']
 
 def create_dir(dirname):
     try:
@@ -59,33 +60,34 @@ create_dir('results')
 '''
 create_dir('results/synthetic/big')
 # AHO vs KMP vs BFA on single-pattern matching
-pattern = 'a'*19999 + 'b'
+pattern = 'a'*1999 + 'b'
 text = 'a'*100000
-create_dir('data/patterns/synthetic/big')
+create_dir('patterns/synthetic/big')
 create_dir('data/synthetic/big')
-open('data/patterns/synthetic/big/1.txt', 'w').write(pattern)
+open('patterns/synthetic/big/1.txt', 'w').write(pattern)
 open('data/synthetic/big/1.txt', 'w').write(text)
 
-run_experiment('data/patterns/synthetic/big/1.txt', 'data/synthetic/big/1.txt', 'results/synthetic/big')
+run_experiment('patterns/synthetic/big/1.txt', 'data/synthetic/big/1.txt', 'results/synthetic/big')
 
 '''
     Create progressive datasets
 '''
-create_dir('data/patterns/synthetic/progressive')
+create_dir('patterns/synthetic/progressive')
 create_dir('data/synthetic/progressive')
 create_dir('results/synthetic/progressive')
 
 # progressive wrt text length
-lengths = range(1000000, 101000000, 1000000)
+#lengths = range(1000000, 101000000, 1000000)
+lengths = range(1000, 10001, 1000)
 times = []
 for i in range(len(algorithms)):
     times.append([])
 for i in lengths:
     pattern = 'aaaaaaaaaaaaaaab'
-    open('data/patterns/synthetic/progressive/text_length.txt', 'w').write(pattern)
+    open('patterns/synthetic/progressive/text_length.txt', 'w').write(pattern)
     text = 'a'*i
     open('data/synthetic/progressive/text_length_%d.txt'%i, 'w').write(text)
-    obtained_times = run_experiment('data/patterns/synthetic/progressive/text_length.txt', 'data/synthetic/progressive/text_length_%d.txt'%i, 'results/synthetic/progressive')
+    obtained_times = run_experiment('patterns/synthetic/progressive/text_length.txt', 'data/synthetic/progressive/text_length_%d.txt'%i, 'results/synthetic/progressive')
     for i in range(len(algorithms)):
         times[i].append(obtained_times[i])
 
@@ -110,10 +112,10 @@ for i in range(len(algorithms)):
     times.append([])
 for i in lengths:
     pattern = 'aaaaaaaaaaaaaaab\n'*i
-    open('data/patterns/synthetic/progressive/pattern_count_%d.txt'%i, 'w').write(pattern)
+    open('patterns/synthetic/progressive/pattern_count_%d.txt'%i, 'w').write(pattern)
     text = 'a'*1000000
     open('data/synthetic/progressive/pattern_count.txt', 'w').write(text)
-    obtained_times = run_experiment('data/patterns/synthetic/progressive/pattern_count_%d.txt'%i, 'data/synthetic/progressive/pattern_count.txt', 'results/synthetic/progressive')
+    obtained_times = run_experiment('patterns/synthetic/progressive/pattern_count_%d.txt'%i, 'data/synthetic/progressive/pattern_count.txt', 'results/synthetic/progressive')
     for i in range(len(algorithms)):
         times[i].append(obtained_times[i])
 
@@ -138,10 +140,10 @@ for i in range(len(algorithms)):
     times.append([])
 for i in lengths:
     pattern = 'a'*(i-1) + 'b'
-    open('data/patterns/synthetic/progressive/pattern_length_%d.txt'%i, 'w').write(pattern)
+    open('patterns/synthetic/progressive/pattern_length_%d.txt'%i, 'w').write(pattern)
     text = 'a'*1000000
     open('data/synthetic/progressive/pattern_length.txt', 'w').write(text)
-    obtained_times = run_experiment('data/patterns/synthetic/progressive/pattern_length_%d.txt'%i, 'data/synthetic/progressive/pattern_length.txt', 'results/synthetic/progressive')
+    obtained_times = run_experiment('patterns/synthetic/progressive/pattern_length_%d.txt'%i, 'data/synthetic/progressive/pattern_length.txt', 'results/synthetic/progressive')
     for i in range(len(algorithms)):
         times[i].append(obtained_times[i])
 
@@ -162,7 +164,7 @@ plt.close()
 '''
     Perform bibliographic experiments
 '''
-patterns = 'data/patterns/english_words.txt'
+patterns = 'patterns/english_words.txt'
 books_folder = 'data/books'
 
 result_category = 'results/books'

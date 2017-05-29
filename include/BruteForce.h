@@ -4,5 +4,5 @@
 
 class BruteForce {
 public:
-  static std::vector< int > get_matches(std::string pattern, std::string text);
+  static std::vector< int > find_matches(std::string pattern, std::string text);
 };

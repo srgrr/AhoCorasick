@@ -20,7 +20,7 @@ std::vector< int > KMP::get_prefix_table(std::string pattern) {
 }
 
 //static
-std::vector< int > KMP::get_matches(std::vector<int>& prefix_table,
+std::vector< int > KMP::find_matches(std::vector<int>& prefix_table,
                                            std::string pattern,
                                            std::string text) {
   std::vector< int > ret;
@@ -38,11 +38,11 @@ std::vector< int > KMP::get_matches(std::vector<int>& prefix_table,
 }
 
 //static
-std::vector< int > KMP::get_matches(std::string pattern, std::string text) {
+std::vector< int > KMP::find_matches(std::string pattern, std::string text) {
   std::vector< int > prefix_table = KMP::get_prefix_table(pattern);
-  return KMP::get_matches(prefix_table, pattern, text);
+  return KMP::find_matches(prefix_table, pattern, text);
 }
 
-std::vector< int > KMP::get_matches(std::string text) {
-  return KMP::get_matches(_prefix_table, _pattern, text);
+std::vector< int > KMP::find_matches(std::string text) {
+  return KMP::find_matches(_prefix_table, _pattern, text);
 }
