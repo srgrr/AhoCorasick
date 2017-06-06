@@ -1,4 +1,5 @@
 #pragma once
+#include "Matcher.h"
 #include <iostream>
 #include <vector>
 
@@ -7,16 +8,14 @@
   This algorithm is implemented for comparison purposes.
 */
 
-class KMP {
+class KMP : public Matcher {
 private:
-  std::string _pattern;
-  std::vector< int > _prefix_table;
+  std::vector< std::vector< int > > _prefix_tables;
+  std::vector< int > _find_matches(std::vector< int >& prefix_table,
+                                   std::string& pattern,
+                                   std::string& text);
+  std::vector< int > _get_prefix_table(std::string& pattern);
 public:
-  KMP(std::string pattern);
-  static std::vector< int > get_prefix_table(std::string pattern);
-  static std::vector< int > find_matches(std::vector<int>& prefix_table,
-                                        std::string pattern,
-                                        std::string text);
-  static std::vector< int > find_matches(std::string pattern, std::string text);
-  std::vector< int > find_matches(std::string text);
+  KMP(std::vector< std::string >& patterns);
+  std::vector< std::vector< int > > find_matches(std::string& text);
 };

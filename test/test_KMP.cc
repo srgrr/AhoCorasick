@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "Matcher.h"
 #include "KMP.h"
 #include "BruteForce.h"
 #include <iostream>
@@ -29,48 +30,38 @@ class KMPTest : public ::testing::Test {
   // Objects declared here can be used by all tests in the test case for Foo.
 };
 
-TEST_F(KMPTest, prefix_test_1) {
-  std::vector< int > got = KMP::get_prefix_table("evanev");
-  //                            e  v  a  n  e  v  #
-  std::vector< int > should = {-1, 0, 0, 0, 0, 1, 2};
-  ASSERT_EQ(should, got);
-}
-
-TEST_F(KMPTest, prefix_test_2) {
-  std::vector< int > got = KMP::get_prefix_table("abbabba");
-  //                            a  b  b  a  b  b  a  #
-  std::vector< int > should = {-1, 0, 0, 0, 1, 2, 3, 4};
-  ASSERT_EQ(should, got);
-}
 
 TEST_F(KMPTest, match_test_1) {
   std::string pattern = "aba";
   std::string text = "ababa";
-  std::vector< int > got = KMP::find_matches(pattern, text);
+  std::vector< std::string > patterns = {pattern};
+  KMP* matcher = new KMP(patterns);
+  std::vector< std::vector< int > > got = matcher->find_matches(text);
   std::vector< int > should = {0, 2};
-  ASSERT_EQ(should, got);
-}
-
-TEST_F(KMPTest, match_test_2) {
-  KMP matcher("aba");
-  std::vector< int > got = matcher.find_matches("ababa");
-  std::vector< int > should = {0, 2};
-  ASSERT_EQ(should, got);
+  ASSERT_EQ(should, got[0]);
 }
 
 TEST_F(KMPTest, match_test_random) {
  std::srand(0);
  char pool[4] = {'A', 'C', 'T', 'G'};
- for(int i=0; i<100000; ++i) {
+ std::vector< std::string > patterns;
+ std::vector< std::string > texts;
+ for(int i=0; i<100; ++i) {
    int p = std::rand()%4 + 2;
-   int t = std::rand()%1000 + 8;
+   int t = std::rand()%100 + 8;
    std::string pattern;
    std::string text;
    for(int j=0; j<p; ++j) pattern += pool[std::rand()%4];
    for(int j=0; j<t; ++j) text += pool[std::rand()%4];
-   std::vector< int > bf = BruteForce::find_matches(pattern, text);
-   std::vector< int > kmp = KMP::find_matches(pattern, text);
-   ASSERT_EQ(bf, kmp);
+   patterns.push_back(pattern);
+   texts.push_back(text);
+ }
+ KMP* matcher1 = new KMP(patterns);
+ BruteForce* matcher2 = new BruteForce(patterns);
+ for(std::string& text : texts) {
+   auto res1 = matcher1->find_matches(text);
+   auto res2 = matcher2->find_matches(text);
+   ASSERT_EQ(res1, res2);
  }
 }
 

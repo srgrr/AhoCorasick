@@ -1,3 +1,4 @@
+#include "Matcher.h"
 #include "AhoCorasick.h"
 #include "BruteForce.h"
 #include "Trie.h"
@@ -7,32 +8,6 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-
-std::vector< std::vector< int > > aho(std::vector < std::string > patterns, std::string text) {
- AhoCorasick matcher(patterns);
- return matcher.find_matches(text);
-}
-
-std::vector< std::vector< int > > trie(std::vector < std::string > patterns, std::string text) {
- Trie matcher(patterns);
- return matcher.find_matches(text);
-}
-
-std::vector< std::vector< int > > kmp(std::vector < std::string > patterns, std::string text) {
-  std::vector< std::vector< int > > ret;
-  for(int i=0; i<int(patterns.size()); ++i) {
-    ret.push_back(KMP::find_matches(patterns[i], text));
-  }
-  return ret;
-}
-
-std::vector< std::vector< int > > bf(std::vector < std::string > patterns, std::string text) {
-  std::vector< std::vector< int > > ret;
-  for(int i=0; i<int(patterns.size()); ++i) {
-    ret.push_back(BruteForce::find_matches(patterns[i], text));
-  }
-  return ret;
-}
 
 void print_beautified(std::vector< std::string > patterns, std::vector< std::vector< int > > results) {
   std::vector< std::pair< int, std::string > > freqs;
@@ -60,10 +35,21 @@ int main(int argc, char** argv) {
   std::ostringstream oss;
   oss << text_handler.rdbuf();
   std::string text = oss.str();
-  std::vector< std::vector< int > > matches;
-  if(algorithm == "aho") matches = aho(patterns, text);
-  else if(algorithm == "kmp") matches = kmp(patterns, text);
-  else if(algorithm == "trie") matches = trie(patterns, text);
-  else matches = bf(patterns, text);
+
+  Matcher* matcher = NULL;
+  if(algorithm == "aho") {
+    matcher = new AhoCorasick(patterns);
+  }
+  else if(algorithm == "kmp") {
+    matcher = new KMP(patterns);
+  }
+  else if(algorithm == "trie") {
+    matcher = new Trie(patterns);
+  }
+  else if(algorithm == "bfa") {
+    matcher = new BruteForce(patterns);
+  }
+
+  std::vector< std::vector< int > > matches = matcher->find_matches(text);
   print_beautified(patterns, matches);
 }

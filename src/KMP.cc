@@ -1,12 +1,12 @@
 #include "KMP.h"
 
-KMP::KMP(std::string pattern) {
-  _pattern = pattern;
-  _prefix_table = KMP::get_prefix_table(pattern);
+KMP::KMP(std::vector< std::string >& patterns) : Matcher(patterns) {
+  for(std::string& pattern : _patterns) {
+    _prefix_tables.push_back(_get_prefix_table(pattern));
+  }
 }
 
-//static
-std::vector< int > KMP::get_prefix_table(std::string pattern) {
+std::vector< int > KMP::_get_prefix_table(std::string& pattern) {
   int n = int(pattern.size());
   std::vector< int > ret(n+1);
   ret[0] = -1;
@@ -19,10 +19,9 @@ std::vector< int > KMP::get_prefix_table(std::string pattern) {
   return ret;
 }
 
-//static
-std::vector< int > KMP::find_matches(std::vector<int>& prefix_table,
-                                           std::string pattern,
-                                           std::string text) {
+std::vector< int > KMP::_find_matches(std::vector<int>& prefix_table,
+                                      std::string& pattern,
+                                      std::string& text) {
   std::vector< int > ret;
   int n = int(text.size());
   int l = 0, r = 0;
@@ -37,12 +36,10 @@ std::vector< int > KMP::find_matches(std::vector<int>& prefix_table,
   return ret;
 }
 
-//static
-std::vector< int > KMP::find_matches(std::string pattern, std::string text) {
-  std::vector< int > prefix_table = KMP::get_prefix_table(pattern);
-  return KMP::find_matches(prefix_table, pattern, text);
-}
-
-std::vector< int > KMP::find_matches(std::string text) {
-  return KMP::find_matches(_prefix_table, _pattern, text);
+std::vector< std::vector< int > > KMP::find_matches(std::string& text) {
+  std::vector< std::vector< int > > ret(_patterns.size());
+  for(int i=0; i<int(_patterns.size()); ++i) {
+    ret[i] = _find_matches(_prefix_tables[i], _patterns[i], text);
+  }
+  return ret;
 }

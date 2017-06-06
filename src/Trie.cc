@@ -1,9 +1,9 @@
 #include "Trie.h"
 
-TrieNode* Trie::_insert_word(TrieNode* root, std::string w, int index, int output_index) {
+Trie::Node* Trie::_insert_word(Trie::Node* root, std::string w, int index, int output_index) {
   if(root == NULL) {
-    root = new TrieNode();
-    root->adj = std::vector< TrieNode* >(Trie::ALPHABET_SIZE, NULL);
+    root = new Trie::Node();
+    root->adj = std::vector< Trie::Node* >(Trie::ALPHABET_SIZE, NULL);
   }
   if(index == int(w.size())) {
     root->output.insert(output_index);
@@ -13,7 +13,7 @@ TrieNode* Trie::_insert_word(TrieNode* root, std::string w, int index, int outpu
   return root;
 }
 
-void _erase_tree(TrieNode* root) {
+void Trie::_erase_tree(Trie::Node* root) {
   if(root == NULL) return;
   for(int i = 0; i<int(root->adj.size()); ++i) {
     _erase_tree(root->adj[i]);
@@ -25,7 +25,7 @@ Trie::~Trie() {
   _erase_tree(_root);
 }
 
-Trie::Trie(std::vector< std::string > patterns) {
+Trie::Trie(std::vector< std::string >& patterns) : Matcher(patterns) {
   _root = NULL;
   _patterns = patterns;
   for(int i=0; i<int(_patterns.size()); ++i) {
@@ -33,10 +33,10 @@ Trie::Trie(std::vector< std::string > patterns) {
   }
 }
 
-std::vector< std::vector< int > > Trie::find_matches(std::string text) {
+std::vector< std::vector< int > > Trie::find_matches(std::string& text) {
   std::vector< std::vector< int > > ret(int(_patterns.size()), std::vector< int >());
   for(int i=0; i<int(text.size()); ++i) {
-    TrieNode* current = _root;
+    Trie::Node* current = _root;
     int j = i;
     while(j < int(text.size()) && current != NULL) {
       current = current->adj[text[j]];

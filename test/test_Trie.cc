@@ -30,8 +30,9 @@ TEST_F(TrieTest, test_1) {
   std::vector< std::string > patterns = {
     "a"
   };
-  Trie machine(patterns);
-  std::vector< std::vector< int > > got = machine.find_matches("a");
+  std::string text = "a";
+  Trie* machine = new Trie(patterns);
+  std::vector< std::vector< int > > got = machine->find_matches(text);
   std::vector< std::vector< int > > should = {{0}};
   ASSERT_EQ(got, should);
 }
@@ -41,8 +42,9 @@ TEST_F(TrieTest, test_2) {
   std::vector< std::string > patterns = {
     "aba"
   };
-  Trie machine(patterns);
-  std::vector< std::vector< int > > got = machine.find_matches("ababa");
+  std::string text = "ababa";
+  Trie* machine = new Trie(patterns);
+  std::vector< std::vector< int > > got = machine->find_matches(text);
   std::vector< std::vector< int > > should = {{0, 2}};
   ASSERT_EQ(got, should);
 }
@@ -54,8 +56,9 @@ TEST_F(TrieTest, test_3) {
     "ba",
     "aba"
   };
-  Trie machine(patterns);
-  std::vector< std::vector< int > > got = machine.find_matches("aba");
+  std::string text = "aba";
+  Trie* machine = new Trie(patterns);
+  std::vector< std::vector< int > > got = machine->find_matches(text);
   std::vector< std::vector< int > > should = {{0}, {1}, {0}};
   ASSERT_EQ(got, should);
 }
@@ -77,14 +80,10 @@ TEST_F(TrieTest, test_random) {
     for(int i=0; i<text_len; ++i) {
       text += pool[std::rand()%4];
     }
-
-    std::vector< std::vector< int > > bruteforce_ans(num_patterns);
-    for(int i=0; i<num_patterns; ++i) {
-      bruteforce_ans[i] = BruteForce::find_matches(patterns[i], text);
-    }
-
-    Trie matcher(patterns);
-    std::vector< std::vector< int > > Trie_ans = matcher.find_matches(text);
+    BruteForce* bf = new BruteForce(patterns);
+    std::vector< std::vector< int > > bruteforce_ans = bf->find_matches(text);
+    Trie* matcher = new Trie(patterns);
+    std::vector< std::vector< int > > Trie_ans = matcher->find_matches(text);
     ASSERT_EQ(bruteforce_ans, Trie_ans);
   }
 }

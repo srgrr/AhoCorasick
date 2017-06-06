@@ -1,9 +1,9 @@
 #include "AhoCorasick.h"
 
-Node* AhoCorasick::_trie_insert(Node* root, std::string w, int index, int output_index) {
+AhoCorasick::Node* AhoCorasick::_trie_insert(AhoCorasick::Node* root, std::string w, int index, int output_index) {
   if(root == NULL) {
-    root = new Node();
-    root->adj = std::vector< Node* >(AhoCorasick::ALPHABET_SIZE, NULL);
+    root = new AhoCorasick::Node();
+    root->adj = std::vector< AhoCorasick::Node* >(AhoCorasick::ALPHABET_SIZE, NULL);
   }
   if(index == int(w.size())) {
     root->output.insert(output_index);
@@ -37,7 +37,7 @@ void AhoCorasick::_build_automata()  {
   _root->fail = _root;
   // As a second step, we must build the failure function
   // This part of code corresponds to the one explained in Algorithm 3
-  std::queue< Node* > Q;
+  std::queue< AhoCorasick::Node* > Q;
 
   for(int i=0; i<AhoCorasick::ALPHABET_SIZE; ++i) {
     if(_root->adj[i] != NULL && _root->adj[i] != _root) {
@@ -47,12 +47,12 @@ void AhoCorasick::_build_automata()  {
   }
 
   while(!Q.empty()) {
-    Node* v = Q.front();
+    AhoCorasick::Node* v = Q.front();
     Q.pop();
     for(int i=0; i<AhoCorasick::ALPHABET_SIZE; ++i) {
       if(v->adj[i] != NULL) {
         Q.push(v->adj[i]);
-        Node* state = v->fail;
+        AhoCorasick::Node* state = v->fail;
         while(state->adj[i] == NULL) state = state->fail;
         v->adj[i]->fail = state->adj[i];
         // merge the outputs of the adjacent state to its fail state
@@ -63,7 +63,7 @@ void AhoCorasick::_build_automata()  {
   }
 }
 
-void AhoCorasick::_erase_tree(Node* root) {
+void AhoCorasick::_erase_tree(AhoCorasick::Node* root) {
   if(root == NULL) return;
   for(int i=0; i<AhoCorasick::ALPHABET_SIZE; ++i) {
     if(root->adj[i] != root) {
@@ -77,7 +77,13 @@ AhoCorasick::~AhoCorasick() {
   _erase_tree(_root);
 }
 
-AhoCorasick::AhoCorasick(std::vector< std::string > patterns) {
+
+void AhoCorasick::_set_patterns(std::vector< std::string >& patterns) {
+  _patterns = patterns;
+  _build_automata();
+}
+
+AhoCorasick::AhoCorasick(std::vector< std::string >& patterns) : Matcher(patterns) {
   _set_patterns(patterns);
 }
 
@@ -85,10 +91,10 @@ AhoCorasick::AhoCorasick(std::vector< std::string > patterns) {
   This method uses the previously built automata to find all the
   matches of the patterns on a given string
 */
-std::vector< std::vector< int > > AhoCorasick::find_matches(std::string text) {
+std::vector< std::vector< int > > AhoCorasick::find_matches(std::string& text) {
   std::vector< std::vector< int > > ret(int(_patterns.size()), std::vector< int >());
 
-  Node* current_state = _root;
+  AhoCorasick::Node* current_state = _root;
 
   for(int i=0; i<int(text.size()); ++i) {
     // this step comes from the paragraph that begins with
@@ -111,29 +117,7 @@ std::vector< std::vector< int > > AhoCorasick::find_matches(std::string text) {
   return ret;
 }
 
-/*
-  This is simply a fancy wrapper that returns the same as the method above
-  but in a map of the form < string, vector<int> >
-*/
-std::map< std::string, std::vector< int > > AhoCorasick::find_matches_map(std::string text) {
-  std::vector< std::vector< int > > _ret = find_matches(text);
-  std::map< std::string, std::vector< int > > ret;
-  for(int i=0; i<int(_patterns.size()); ++i) {
-    ret[_patterns[i]] = _ret[i];
-  }
-  return ret;
-}
-
-void AhoCorasick::_set_patterns(std::vector< std::string > patterns) {
-  _patterns = patterns;
-  _build_automata();
-}
-
-const std::vector< std::string >& AhoCorasick::get_patterns() {
-  return _patterns;
-}
-
-void AhoCorasick::_label_automata(Node* root, std::string pref) {
+void AhoCorasick::_label_automata(AhoCorasick::Node* root, std::string pref) {
   _label_map[root] = pref;
   for(int i=0; i<AhoCorasick::ALPHABET_SIZE; ++i) {
     if(root->adj[i] != NULL && root->adj[i] != root) {
@@ -146,10 +130,10 @@ void AhoCorasick::print_dot_automata() {
   _label_map.clear();
   _label_automata(_root, "");
   std::cout << "digraph AhoCorasickAutomata {" << std::endl;
-  std::queue< Node* > Q;
+  std::queue< AhoCorasick::Node* > Q;
   Q.push(_root);
   while(!Q.empty()) {
-    Node* v = Q.front();
+    AhoCorasick::Node* v = Q.front();
     Q.pop();
     std::cout << "\"" << _label_map[v] << "\"" << " -> " << "\"" << _label_map[v->fail] <<  "\"" <<" [label=\"#\"];" << std::endl;
     for(int i=0; i<AhoCorasick::ALPHABET_SIZE; ++i) {
